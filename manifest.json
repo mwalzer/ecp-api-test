@@ -1,0 +1,28 @@
+{
+    "applicationName": "apitest",
+    "contactEmail": "walzer@ebi.ac.uk",
+    "about": "api test instance",
+    "version": "0.1",
+    "cloudProviders": [
+        {
+            "cloudProvider": "OSTACK",
+            "path": "ostack"
+        }
+    ],
+    "inputs": [
+        "instance_number",
+        "redis_bind"
+    ],
+    "deploymentParameters": [
+        "redis_version",
+        "parameter_2_name",
+        "disk_image_name",
+        "remote_user",
+        "machine_type",
+        "floating_ip_pool",
+        "network_name"
+    ],
+    "outputs": [
+        "external_ip"
+    ]
+}

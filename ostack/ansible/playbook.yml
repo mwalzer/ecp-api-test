@@ -1,0 +1,37 @@
+---
+- name: Warming up apitest instance
+  gather_facts: no
+  hosts: instance_public_ip
+
+  tasks:
+  - name: Initial connection block
+    block:
+      - name: Wait 2 minutes, but only start checking after 30 seconds
+        wait_for_connection:
+          delay: 30
+          timeout: 120
+    rescue:
+      - name: Try to install python 2, when ansible is not able to connect
+        raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: Set up redis_bind
+  hosts: instance_public_ip
+  become: yes
+  vars:
+    - redis_bind: "127.0.0.1"
+    - redis_version: "{{lookup('env','TF_VAR_redis_version')}}"
+    - redis_bind: "{{lookup('env','TF_VAR_redis_bind')}}"
+  roles:
+    - role: 'davidwittman.redis'
+
+- name: Change authorized public keys
+  gather_facts: no
+  hosts: instance_public_ip
+
+  tasks:
+  - name: Make sure the user key is authorized on the apitest instance
+    authorized_key:
+      user: "{{lookup('env','ANSIBLE_REMOTE_USER')}}"
+      key: "{{lookup('env','ssh_key')}}"
+      exclusive: no
+      state: present

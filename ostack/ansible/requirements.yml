@@ -1,0 +1,4 @@
+---
+- name: davidwittman.redis
+  version: master
+  src: davidwittman.redis
